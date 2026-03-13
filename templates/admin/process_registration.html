@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 挂号受理{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">挂号受理</h2>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>受理挂号</h3>
+        <form method="POST" action="{{ url_for('admin_process_registration') }}">
+            <div class="form-group">
+                <label for="registration_id">挂号编号：</label>
+                <input type="number" class="form-control" id="registration_id" name="registration_id" 
+                       placeholder="请输入要受理的挂号编号" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="doctor_id">分配医生：</label>
+                <select class="form-control" id="doctor_id" name="doctor_id" required>
+                    <option value="">请选择医生</option>
+                    {% for doctor in doctors %}
+                    <option value="{{ doctor.doctor_id }}">
+                        {{ doctor.name }} - {{ doctor.position or '无职称' }} - {{ doctor.department_name or '未分配科室' }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="submit" class="btn">受理挂号</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>未受理挂号列表</h3>
+        {% if registrations %}
+            <p>共 <strong>{{ registrations|length }}</strong> 个未受理挂号</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>挂号编号</th>
+                        <th>患者姓名</th>
+                        <th>科室</th>
+                        <th>挂号时间</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registration in registrations %}
+                    <tr>
+                        <td>{{ registration.registration_id }}</td>
+                        <td>
+                            {% if registration.patient_name %}
+                                {{ registration.patient_name }}
+                            {% else %}
+                                未知患者
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if registration.department_name %}
+                                {{ registration.department_name }}
+                            {% else %}
+                                未知科室
+                            {% endif %}
+                        </td>
+                        <td>{{ registration.created_at.strftime('%Y-%m-%d %H:%M:%S') if registration.created_at else '未知' }}</td>
+                        <td>⏳ 待受理</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 2rem;">
+                <p style="color: #666; font-size: 1.2rem;">暂无未受理挂号</p>
+                <p style="color: #999;">所有挂号已受理完成</p>
+            </div>
+        {% endif %}
+    </div>
+    
+    <div class="card">
+        <h3>医生列表</h3>
+        {% if doctors %}
+            <p>共 <strong>{{ doctors|length }}</strong> 位医生</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>工号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>职称</th>
+                        <th>科室</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doctor in doctors %}
+                    <tr>
+                        <td>{{ doctor.doctor_id }}</td>
+                        <td>{{ doctor.name }}</td>
+                        <td>{{ doctor.gender }}</td>
+                        <td>{{ doctor.position or '无职称' }}</td>
+                        <td>{{ doctor.department_name or '未分配' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 2rem;">
+                <p style="color: #666; font-size: 1.2rem;">暂无医生信息</p>
+                <p style="color: #999;">请先添加医生</p>
+            </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('admin_home') }}" class="btn btn-secondary">返回管理后台</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

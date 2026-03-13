@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 医生中心{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h2 style="color: #667eea; margin-bottom: 1rem;">医生工作台</h2>
+        <p style="font-size: 1.2rem; color: #666;">
+            欢迎回来，<strong>{{ session.get('doctor_name', '医生') }}</strong>！您的工号：<strong>{{ session.get('doctor_id') }}</strong>
+        </p>
+    </div>
+
+    <div class="role-selection">
+        <div class="role-card">
+            <h3>📋 待办挂号管理</h3>
+            <p>查看待办挂号、开具处方、完成就诊等操作</p>
+            <a href="{{ url_for('doctor_registrations') }}" class="btn">进入挂号管理</a>
+        </div>
+    </div>
+
+    <div style="margin-top: 2rem; text-align: center;">
+        <a href="{{ url_for('doctor_logout') }}" class="btn btn-secondary">退出登录</a>
+    </div>
+</div>
+{% endblock %}

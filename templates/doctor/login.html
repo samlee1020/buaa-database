@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 医生登录{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">医生登录</h2>
+    
+    <div class="card">
+        <form method="POST" action="{{ url_for('doctor_login') }}">
+            <div class="form-group">
+                <label for="doctor_id">工号：</label>
+                <input type="number" class="form-control" id="doctor_id" name="doctor_id" 
+                       placeholder="请输入您的工号" required>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="submit" class="btn">登录</button>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary" style="margin-left: 1rem;">返回首页</a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card" style="margin-top: 2rem;">
+        <h3>登录说明</h3>
+        <ul style="list-style: none; padding-left: 0;">
+            <li>🔢 <strong>工号</strong>是医院为您分配的唯一工作标识</li>
+            <li>❓ <strong>忘记工号？</strong>请联系系统管理员</li>
+            <li>👨‍⚕️ <strong>新医生？</strong>请联系管理员为您创建账号</li>
+            <li>✅ <strong>登录后</strong>可以查看待办挂号、开具处方等</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

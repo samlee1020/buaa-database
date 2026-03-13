@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 更新个人信息{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">更新个人信息</h2>
+    
+    <div class="card">
+        <form method="POST" action="{{ url_for('patient_update_info') }}">
+            <div class="form-group">
+                <label for="update_type">更新类型：</label>
+                <select class="form-control" id="update_type" name="update_type" required>
+                    <option value="">请选择要更新的信息</option>
+                    <option value="name">姓名</option>
+                    <option value="phone_number">手机号</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="new_value">新值：</label>
+                <input type="text" class="form-control" id="new_value" name="new_value" 
+                       placeholder="请输入新的信息" required>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="submit" class="btn">更新信息</button>
+                <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary" style="margin-left: 1rem;">返回</a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card" style="margin-top: 2rem;">
+        <h3>更新说明</h3>
+        <ul style="list-style: none; padding-left: 0;">
+            <li>👤 <strong>更新姓名</strong>：修改您的姓名信息</li>
+            <li>📱 <strong>更新手机号</strong>：修改您的联系方式</li>
+            <li>⚠️ <strong>注意</strong>：每次只能更新一项信息</li>
+            <li>✅ <strong>更新后</strong>，新信息将立即生效</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

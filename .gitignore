@@ -1,0 +1,29 @@
+# Conda environment
+.conda/
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+
+# Build files
+build/
+dist/
+*.egg-info/

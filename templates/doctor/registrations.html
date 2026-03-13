@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 医生挂号管理{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">待办挂号管理</h2>
+    
+    <div class="card">
+        <h3>分配给您的挂号信息</h3>
+        {% if results %}
+            <p>您有 <strong>{{ results|length }}</strong> 个待办挂号</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>挂号编号</th>
+                        <th>患者姓名</th>
+                        <th>科室</th>
+                        <th>挂号时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registration in results %}
+                    <tr>
+                        <td>{{ registration.registration_id }}</td>
+                        <td>
+                            {% if registration.patient_name %}
+                                {{ registration.patient_name }}
+                            {% else %}
+                                未知患者
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if registration.department_name %}
+                                {{ registration.department_name }}
+                            {% else %}
+                                未知科室
+                            {% endif %}
+                        </td>
+                        <td>{{ registration.created_at.strftime('%Y-%m-%d %H:%M:%S') if registration.created_at else '未知' }}</td>
+                        <td>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <!-- 开具处方按钮 -->
+                                <button type="button" class="btn" 
+                                        style="padding: 0.25rem 0.75rem; font-size: 0.9rem; background-color: #007bff; border-color: #007bff;"
+                                        onclick="showPrescriptionForm({{ registration.registration_id }})">
+                                    开具处方
+                                </button>
+                                
+                                <!-- 完成就诊按钮 -->
+                                <form method="POST" action="{{ url_for('doctor_complete_registration') }}" style="margin: 0;">
+                                    <input type="hidden" name="registration_id" value="{{ registration.registration_id }}">
+                                    <button type="submit" class="btn" 
+                                            style="padding: 0.25rem 0.75rem; font-size: 0.9rem; background-color: #28a745; border-color: #28a745;"
+                                            onclick="return confirm('确定要标记该挂号为已出诊吗？此操作不可撤销。')">
+                                        完成就诊
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 2rem;">
+                <p style="color: #666; font-size: 1.2rem;">暂无待办挂号</p>
+                <p style="color: #999;">所有挂号已处理完成</p>
+            </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-secondary">返回工作台</a>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-top: 2rem;">
+        <h3>工作流程说明</h3>
+        <ul style="list-style: none; padding-left: 0;">
+            <li>📋 <strong>查看挂号</strong>：查看分配给您的患者挂号信息</li>
+            <li>👥 <strong>患者就诊</strong>：为患者进行诊断和治疗</li>
+            <li>💊 <strong>开具处方</strong>：根据诊断结果开具药品处方</li>
+            <li>✅ <strong>完成就诊</strong>：处方开具后就诊流程完成</li>
+            <li>📊 <strong>记录保存</strong>：所有就诊记录自动保存</li>
+        </ul>
+    </div>
+    
+    <!-- 处方开具模态框 -->
+    <div id="prescriptionModal" class="modal" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5);">
+        <div class="modal-content" style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 500px; border-radius: 10px;">
+            <span class="close" onclick="closePrescriptionModal()" style="float: right; font-size: 28px; font-weight: bold; cursor: pointer;">&times;</span>
+            <h3>开具处方</h3>
+            <form id="prescriptionForm" method="POST" action="{{ url_for('doctor_create_prescription') }}">
+                <input type="hidden" id="modalRegistrationId" name="registration_id">
+                <div class="form-group">
+                    <label for="drug_id">选择药品：</label>
+                    <select id="drug_id" name="drug_id" class="form-control" required>
+                        <option value="">请选择药品</option>
+                        {% for drug in drugs %}
+                        <option value="{{ drug.drug_id }}">{{ drug.drug_name }} - ¥{{ "%.2f"|format(drug.drug_price) }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">药品数量：</label>
+                    <input type="number" id="quantity" name="quantity" class="form-control" min="1" required>
+                </div>
+                <div style="margin-top: 1rem; text-align: right;">
+                    <button type="button" class="btn btn-secondary" onclick="closePrescriptionModal()">取消</button>
+                    <button type="submit" class="btn btn-primary">开具处方</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function showPrescriptionForm(registrationId) {
+    document.getElementById('modalRegistrationId').value = registrationId;
+    document.getElementById('prescriptionModal').style.display = 'block';
+}
+
+function closePrescriptionModal() {
+    document.getElementById('prescriptionModal').style.display = 'none';
+    document.getElementById('prescriptionForm').reset();
+}
+
+// 点击模态框外部关闭
+window.onclick = function(event) {
+    const modal = document.getElementById('prescriptionModal');
+    if (event.target == modal) {
+        closePrescriptionModal();
+    }
+}
+</script>
+{% endblock %}

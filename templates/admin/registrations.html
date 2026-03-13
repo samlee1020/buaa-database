@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 挂号管理{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">挂号管理</h2>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>删除挂号</h3>
+        <form method="POST" action="{{ url_for('admin_registrations') }}">
+            <input type="hidden" name="action" value="delete">
+            <div class="form-group">
+                <label for="delete_registration_id">挂号编号：</label>
+                <input type="number" class="form-control" id="delete_registration_id" name="registration_id" 
+                       placeholder="请输入要删除的挂号编号" required>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('确定要删除这个挂号记录吗？')">删除挂号</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>挂号列表</h3>
+        {% if registrations %}
+            <p>共 <strong>{{ registrations|length }}</strong> 条挂号记录</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>挂号编号</th>
+                        <th>病历号</th>
+                        <th>患者姓名</th>
+                        <th>科室</th>
+                        <th>医生</th>
+                        <th>挂号时间</th>
+                        <th>状态</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registration in registrations %}
+                    <tr>
+                        <td>{{ registration.registration_id }}</td>
+                        <td>{{ registration.patient_id }}</td>
+                        <td>{{ registration.patient_name or '未知' }}</td>
+                        <td>{{ registration.department_name or '未分配' }}</td>
+                        <td>{{ registration.doctor_name or '未分配' }}</td>
+                        <td>{{ registration.created_at.strftime('%Y-%m-%d %H:%M:%S') if registration.created_at else '未知' }}</td>
+                        <td>
+                            {% if registration.doctor_id %}
+                                <span style="color: green;">已受理</span>
+                            {% else %}
+                                <span style="color: orange;">待受理</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 2rem;">
+                <p style="color: #666; font-size: 1.2rem;">暂无挂号记录</p>
+                <p style="color: #999;">请先创建挂号</p>
+            </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('admin_home') }}" class="btn btn-secondary">返回管理后台</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

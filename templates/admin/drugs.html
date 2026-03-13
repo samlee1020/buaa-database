@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 药品管理{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">药品管理</h2>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>新增药品</h3>
+        <form method="POST" action="{{ url_for('admin_drugs') }}">
+            <input type="hidden" name="action" value="add">
+            <div class="form-group">
+                <label for="name">药品名称：</label>
+                <input type="text" class="form-control" id="name" name="name" 
+                       placeholder="请输入药品名称" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="quantity">库存数量：</label>
+                <input type="number" class="form-control" id="quantity" name="quantity" 
+                       placeholder="请输入库存数量" min="0" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="price">药品价格：</label>
+                <input type="number" class="form-control" id="price" name="price" 
+                       placeholder="请输入药品价格" min="0" step="0.01" required>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="submit" class="btn">新增药品</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>修改药品信息</h3>
+        <form method="POST" action="{{ url_for('admin_drugs') }}">
+            <input type="hidden" name="action" value="update">
+            <div class="form-group">
+                <label for="drug_id">药品编号：</label>
+                <input type="number" class="form-control" id="drug_id" name="drug_id" 
+                       placeholder="请输入药品编号" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="update_type">修改类型：</label>
+                <select class="form-control" id="update_type" name="update_type" required>
+                    <option value="">请选择修改类型</option>
+                    <option value="price">价格</option>
+                    <option value="stored_quantity">库存数量</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="new_value">新值：</label>
+                <input type="text" class="form-control" id="new_value" name="new_value" 
+                       placeholder="请输入新的值" required>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="submit" class="btn">修改信息</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>删除药品</h3>
+        <form method="POST" action="{{ url_for('admin_drugs') }}">
+            <input type="hidden" name="action" value="delete">
+            <div class="form-group">
+                <label for="delete_drug_id">药品编号：</label>
+                <input type="number" class="form-control" id="delete_drug_id" name="drug_id" 
+                       placeholder="请输入要删除的药品编号" required>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('确定要删除这个药品吗？')">删除药品</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>药品列表</h3>
+        {% if drugs %}
+            <p>共 <strong>{{ drugs|length }}</strong> 种药品</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>药品编号</th>
+                        <th>药品名称</th>
+                        <th>库存数量</th>
+                        <th>单价</th>
+                        <th>创建时间</th>
+                        <th>更新时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for drug in drugs %}
+                    <tr>
+                        <td>{{ drug.drug_id }}</td>
+                        <td>{{ drug.drug_name }}</td>
+                        <td>{{ drug.stored_quantity }}</td>
+                        <td>¥{{ "%.2f"|format(drug.drug_price) }}</td>
+                        <td>{{ drug.created_at.strftime('%Y-%m-%d %H:%M:%S') if drug.created_at else '未知' }}</td>
+                        <td>{{ drug.updated_at.strftime('%Y-%m-%d %H:%M:%S') if drug.updated_at else '未更新' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 2rem;">
+                <p style="color: #666; font-size: 1.2rem;">暂无药品信息</p>
+                <p style="color: #999;">请先添加药品</p>
+            </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('admin_home') }}" class="btn btn-secondary">返回管理后台</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

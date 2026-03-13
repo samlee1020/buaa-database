@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 首页{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 3rem;">
+    <h2 style="color: #667eea; margin-bottom: 1rem;">欢迎使用门诊管理系统</h2>
+    <p style="font-size: 1.2rem; color: #666; max-width: 600px; margin: 0 auto;">
+        本系统为医院门诊提供全面的管理服务，支持患者、医生和管理员三种角色的不同功能需求。
+    </p>
+</div>
+
+<div class="role-selection">
+    <div class="role-card">
+        <h3>👤 患者入口</h3>
+        <p>患者可以查询信息、注册账号、登录系统进行挂号、缴费等操作</p>
+        <a href="{{ url_for('patient_home') }}" class="btn">进入患者系统</a>
+    </div>
+    
+    <div class="role-card">
+        <h3>👨‍⚕️ 医生入口</h3>
+        <p>医生可以登录系统查看待办挂号、为患者开具处方等操作</p>
+        <a href="{{ url_for('doctor_login') }}" class="btn">进入医生系统</a>
+    </div>
+    
+    <div class="role-card">
+        <h3>👨‍💼 管理员入口</h3>
+        <p>管理员可以进行科室管理、医生管理、药品管理等系统维护操作</p>
+        <a href="{{ url_for('admin_home') }}" class="btn">进入管理系统</a>
+    </div>
+</div>
+
+<div style="margin-top: 3rem; padding: 2rem; background: #f8f9fa; border-radius: 10px;">
+    <h3 style="color: #667eea; margin-bottom: 1rem;">系统功能简介</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        <div class="card">
+            <h4>患者功能</h4>
+            <ul style="list-style: none; padding-left: 0;">
+                <li>✓ 患者信息查询</li>
+                <li>✓ 在线注册</li>
+                <li>✓ 科室查询</li>
+                <li>✓ 在线挂号</li>
+                <li>✓ 处方查询</li>
+                <li>✓ 在线缴费</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h4>医生功能</h4>
+            <ul style="list-style: none; padding-left: 0;">
+                <li>✓ 查看待办挂号</li>
+                <li>✓ 开具处方</li>
+                <li>✓ 患者信息查看</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h4>管理功能</h4>
+            <ul style="list-style: none; padding-left: 0;">
+                <li>✓ 科室管理</li>
+                <li>✓ 医生管理</li>
+                <li>✓ 药品管理</li>
+                <li>✓ 挂号受理</li>
+                <li>✓ 数据查看</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

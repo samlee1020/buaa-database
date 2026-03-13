@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 患者中心{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h2 style="color: #667eea; margin-bottom: 1rem;">患者中心</h2>
+        <p style="font-size: 1.2rem; color: #666;">
+            欢迎回来，<strong>{{ session.get('patient_name', '患者') }}</strong>！您的病历号：<strong>{{ session.get('patient_id') }}</strong>
+        </p>
+    </div>
+
+    <div class="role-selection">
+        <div class="role-card">
+            <h3>👤 个人信息</h3>
+            <p>查看和修改您的个人信息</p>
+            <a href="{{ url_for('patient_update_info') }}" class="btn">管理信息</a>
+        </div>
+        
+        <div class="role-card">
+            <h3>🏥 科室查询</h3>
+            <p>查看医院科室信息</p>
+            <a href="{{ url_for('patient_query_department') }}" class="btn">查看科室</a>
+        </div>
+        
+        <div class="role-card">
+            <h3>📋 在线挂号</h3>
+            <p>选择科室进行在线挂号预约</p>
+            <a href="{{ url_for('patient_create_registration') }}" class="btn">立即挂号</a>
+        </div>
+    </div>
+
+    <div class="role-selection" style="margin-top: 2rem;">
+        <div class="role-card">
+            <h3>📖 挂号记录</h3>
+            <p>查看您的挂号历史和当前状态</p>
+            <a href="{{ url_for('patient_query_registration') }}" class="btn">查看记录</a>
+        </div>
+        
+        <div class="role-card">
+            <h3>💊 处方查询</h3>
+            <p>查看医生为您开具的处方信息</p>
+            <a href="{{ url_for('patient_query_prescription') }}" class="btn">查看处方</a>
+        </div>
+        
+        <div class="role-card">
+            <h3>💰 在线缴费</h3>
+            <p>查看和支付待缴费项目</p>
+            <a href="{{ url_for('patient_pay') }}" class="btn">立即缴费</a>
+        </div>
+    </div>
+
+    <div style="margin-top: 3rem; padding: 2rem; background: #f8f9fa; border-radius: 10px; border-left: 4px solid #dc3545;">
+        <h3 style="color: #dc3545; margin-bottom: 1rem;">⚠️ 账户管理</h3>
+        <p style="color: #666; margin-bottom: 1rem;">
+            您可以在这里管理您的账户。删除病历将永久删除您的所有信息，包括挂号记录和缴费记录。
+        </p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <a href="{{ url_for('patient_logout') }}" class="btn btn-secondary">退出登录</a>
+            <button onclick="confirmDelete()" class="btn" style="background-color: #dc3545; border-color: #dc3545;">删除病历</button>
+        </div>
+    </div>
+
+    <script>
+    function confirmDelete() {
+        if (confirm('⚠️ 警告：此操作将永久删除您的病历信息！\n\n删除后将无法恢复，包括：\n• 您的个人信息\n• 所有挂号记录\n• 所有缴费记录\n• 所有处方信息\n\n确定要继续吗？')) {
+            window.location.href = "{{ url_for('patient_delete_account') }}";
+        }
+    }
+    </script>
+</div>
+{% endblock %}

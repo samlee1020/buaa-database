@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 患者入口{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 3rem;">
+    <h2 style="color: #667eea; margin-bottom: 1rem;">患者服务系统</h2>
+    <p style="font-size: 1.2rem; color: #666; max-width: 600px; margin: 0 auto;">
+        欢迎使用患者服务系统，您可以进行信息查询、注册账号、在线挂号等操作
+    </p>
+</div>
+
+<div class="role-selection">
+    <div class="role-card">
+        <h3>🔍 信息查询</h3>
+        <p>通过病历号、姓名或手机号查询患者信息</p>
+        <a href="{{ url_for('patient_query') }}" class="btn">开始查询</a>
+    </div>
+    
+    <div class="role-card">
+        <h3>📝 新患者注册</h3>
+        <p>首次使用系统的患者请先注册账号</p>
+        <a href="{{ url_for('patient_register') }}" class="btn">立即注册</a>
+    </div>
+    
+    <div class="role-card">
+        <h3>🔐 患者登录</h3>
+        <p>已注册患者请登录系统使用更多功能</p>
+        <a href="{{ url_for('patient_login') }}" class="btn">登录系统</a>
+    </div>
+</div>
+
+<div style="margin-top: 3rem; padding: 2rem; background: #f8f9fa; border-radius: 10px;">
+    <h3 style="color: #667eea; margin-bottom: 1rem;">患者服务说明</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+        <div class="card">
+            <h4>基本信息服务</h4>
+            <ul style="list-style: none; padding-left: 0;">
+                <li>✓ 患者信息查询</li>
+                <li>✓ 在线注册账号</li>
+                <li>✓ 个人信息修改</li>
+                <li>✓ 科室信息查询</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h4>就诊服务</h4>
+            <ul style="list-style: none; padding-left: 0;">
+                <li>✓ 在线挂号预约</li>
+                <li>✓ 挂号记录查询</li>
+                <li>✓ 处方信息查看</li>
+            </ul>
+        </div>
+        
+        <div class="card">
+            <h4>缴费服务</h4>
+            <ul style="list-style: none; padding-left: 0;">
+                <li>✓ 待缴费查询</li>
+                <li>✓ 在线缴费</li>
+                <li>✓ 缴费记录查看</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

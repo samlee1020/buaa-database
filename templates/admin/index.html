@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 管理员入口{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-bottom: 3rem;">
+    <h2 style="color: #667eea; margin-bottom: 1rem;">系统管理后台</h2>
+    <p style="font-size: 1.2rem; color: #666; max-width: 600px; margin: 0 auto;">
+        欢迎使用系统管理后台，您可以进行科室管理、医生管理、药品管理等系统维护操作
+    </p>
+</div>
+
+<div class="role-selection">
+    <div class="role-card">
+        <h3>🏥 科室管理</h3>
+        <p>管理医院科室信息，包括新增、修改科室</p>
+        <a href="{{ url_for('admin_departments') }}" class="btn">管理科室</a>
+    </div>
+    
+    <div class="role-card">
+        <h3>👨‍⚕️ 医生管理</h3>
+        <p>管理医生信息，包括新增医生、调整科室等</p>
+        <a href="{{ url_for('admin_doctors') }}" class="btn">管理医生</a>
+    </div>
+    
+    <div class="role-card">
+        <h3>💊 药品管理</h3>
+        <p>管理药品信息，包括新增药品、调整价格库存</p>
+        <a href="{{ url_for('admin_drugs') }}" class="btn">管理药品</a>
+    </div>
+</div>
+
+<div class="role-selection" style="margin-top: 2rem;">
+    <div class="role-card">
+        <h3>📋 挂号受理</h3>
+        <p>受理患者挂号，为挂号分配医生</p>
+        <a href="{{ url_for('admin_process_registration') }}" class="btn">受理挂号</a>
+    </div>
+    
+    <div class="role-card">
+        <h3>📝 挂号管理</h3>
+        <p>管理所有挂号记录，包括删除操作</p>
+        <a href="{{ url_for('admin_registrations') }}" class="btn">管理挂号</a>
+    </div>
+    
+    <div class="role-card">
+        <h3>💊 处方管理</h3>
+        <p>管理所有处方记录，包括删除操作</p>
+        <a href="{{ url_for('admin_prescriptions') }}" class="btn">管理处方</a>
+    </div>
+</div>
+
+<div class="role-selection" style="margin-top: 2rem;">
+    <div class="role-card">
+        <h3>📊 数据查看</h3>
+        <p>查看系统所有数据表的内容</p>
+        <a href="{{ url_for('admin_tables') }}" class="btn">查看数据</a>
+    </div>
+    
+    <div class="role-card">
+        <h3>⚙️ 系统设置</h3>
+        <p>系统参数配置和维护</p>
+        <a href="{{ url_for('admin_settings') }}" class="btn">系统设置</a>
+    </div>
+</div>
+
+<div style="margin-top: 3rem; padding: 2rem; background: #f8f9fa; border-radius: 10px;">
+    <h3 style="color: #667eea; margin-bottom: 1rem;">系统统计信息</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div class="card">
+            <h4>患者总数</h4>
+            <p style="font-size: 2rem; color: #667eea; text-align: center; margin: 0;">{{ stats.patient_count }}</p>
+            <p style="text-align: center; color: #666;">人</p>
+        </div>
+        <div class="card">
+            <h4>医生总数</h4>
+            <p style="font-size: 2rem; color: #667eea; text-align: center; margin: 0;">{{ stats.doctor_count }}</p>
+            <p style="text-align: center; color: #666;">人</p>
+        </div>
+        <div class="card">
+            <h4>挂号总数</h4>
+            <p style="font-size: 2rem; color: #667eea; text-align: center; margin: 0;">{{ stats.registration_count }}</p>
+            <p style="text-align: center; color: #666;">个</p>
+        </div>
+        <div class="card">
+            <h4>药品种类</h4>
+            <p style="font-size: 2rem; color: #667eea; text-align: center; margin: 0;">{{ stats.drug_count }}</p>
+            <p style="text-align: center; color: #666;">种</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

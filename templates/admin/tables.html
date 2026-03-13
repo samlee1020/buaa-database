@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 数据查看{% endblock %}
+
+{% block content %}
+<div style="max-width: 1200px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">数据表内容查看</h2>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>选择数据表</h3>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <a href="{{ url_for('admin_tables') }}?table=patient" class="btn">患者表</a>
+            <a href="{{ url_for('admin_tables') }}?table=department" class="btn">科室表</a>
+            <a href="{{ url_for('admin_tables') }}?table=doctor" class="btn">医生表</a>
+            <a href="{{ url_for('admin_tables') }}?table=drug" class="btn">药品表</a>
+            <a href="{{ url_for('admin_tables') }}?table=payment" class="btn">缴费表</a>
+            <a href="{{ url_for('admin_tables') }}?table=registration" class="btn">挂号表</a>
+            <a href="{{ url_for('admin_tables') }}?table=prescription" class="btn">处方表</a>
+            <a href="{{ url_for('admin_tables') }}" class="btn btn-secondary">查看所有表</a>
+        </div>
+    </div>
+    
+    {% if selected_table == 'all' %}
+        <div class="card">
+            <h3>所有数据表内容</h3>
+            {% for table_name, table_data in all_results.items() %}
+                <div style="margin-bottom: 2rem;">
+                    <h4>{{ table_name }} 表 ({{ table_data|length }} 条记录)</h4>
+                    {% if table_data %}
+                        <div style="overflow-x: auto;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        {% for key in table_data[0].keys() %}
+                                            <th>{{ key }}</th>
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in table_data %}
+                                        <tr>
+                                            {% for value in row.values() %}
+                                                <td>
+                                                    {% if value is string %}
+                                                        {{ value }}
+                                                    {% elif value is number %}
+                                                        {{ value }}
+                                                    {% elif value is none %}
+                                                        NULL
+                                                    {% else %}
+                                                        {{ value|string }}
+                                                    {% endif %}
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p style="color: #666; text-align: center;">表为空</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card">
+            <h3>{{ selected_table }} 表内容</h3>
+            {% if results %}
+                <p>共 <strong>{{ results|length }}</strong> 条记录</p>
+                
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                {% for key in results[0].keys() %}
+                                    <th>{{ key }}</th>
+                                {% endfor %}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in results %}
+                                <tr>
+                                    {% for value in row.values() %}
+                                        <td>
+                                            {% if value is string %}
+                                                {{ value }}
+                                            {% elif value is number %}
+                                                {{ value }}
+                                            {% elif value is none %}
+                                                NULL
+                                            {% else %}
+                                                {{ value|string }}
+                                            {% endif %}
+                                        </td>
+                                    {% endfor %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div style="text-align: center; padding: 2rem;">
+                    <p style="color: #666; font-size: 1.2rem;">表为空</p>
+                    <p style="color: #999;">没有找到任何记录</p>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+    
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{{ url_for('admin_home') }}" class="btn btn-secondary">返回管理后台</a>
+    </div>
+</div>
+{% endblock %}

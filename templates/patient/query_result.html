@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 查询结果{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">患者信息查询结果</h2>
+    
+    {% if query_type and query_key %}
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>查询条件</h3>
+        <p><strong>查询类型：</strong> 
+            {% if query_type == 'patient_id' %}病历号
+            {% elif query_type == 'name' %}姓名
+            {% elif query_type == 'phone_number' %}手机号
+            {% else %}{{ query_type }}{% endif %}
+        </p>
+        <p><strong>查询关键词：</strong> {{ query_key }}</p>
+    </div>
+    {% endif %}
+    
+    <div class="card">
+        <h3>查询结果</h3>
+        {% if results %}
+            <p>共找到 <strong>{{ results|length }}</strong> 条记录</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>病历号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>手机号</th>
+                        <th>创建时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in results %}
+                    <tr>
+                        <td>{{ patient.patient_id }}</td>
+                        <td>{{ patient.name }}</td>
+                        <td>{{ patient.gender }}</td>
+                        <td>{{ patient.phone_number }}</td>
+                        <td>{{ patient.created_at.strftime('%Y-%m-%d %H:%M:%S') if patient.created_at else '未知' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 2rem;">
+                <p style="color: #666; font-size: 1.2rem;">没有找到匹配的患者记录</p>
+                <p style="color: #999;">请检查查询条件是否正确，或尝试其他查询方式</p>
+            </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('patient_query') }}" class="btn">重新查询</a>
+            <a href="{{ url_for('patient_home') }}" class="btn btn-secondary" style="margin-left: 1rem;">返回首页</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

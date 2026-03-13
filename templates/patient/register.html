@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 患者注册{% endblock %}
+
+{% block content %}
+<div style="max-width: 500px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">患者注册</h2>
+    
+    <div class="card">
+        <form method="POST" action="{{ url_for('patient_register') }}">
+            <div class="form-group">
+                <label for="name">姓名：</label>
+                <input type="text" class="form-control" id="name" name="name" 
+                       placeholder="请输入您的姓名" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="gender">性别：</label>
+                <select class="form-control" id="gender" name="gender" required>
+                    <option value="">请选择性别</option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone_number">手机号：</label>
+                <input type="tel" class="form-control" id="phone_number" name="phone_number" 
+                       placeholder="请输入您的手机号" required>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="submit" class="btn">注册</button>
+                <a href="{{ url_for('patient_home') }}" class="btn btn-secondary" style="margin-left: 1rem;">返回</a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card" style="margin-top: 2rem;">
+        <h3>注册说明</h3>
+        <ul style="list-style: none; padding-left: 0;">
+            <li>📝 <strong>注册成功后</strong>，系统会为您生成一个唯一的病历号</li>
+            <li>🔐 <strong>请牢记病历号</strong>，这是您登录系统的凭证</li>
+            <li>📱 <strong>手机号</strong>将用于接收重要通知和找回账号</li>
+            <li>✅ <strong>注册完成后</strong>，请使用病历号登录系统使用更多功能</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

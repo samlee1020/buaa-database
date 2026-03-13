@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 在线缴费{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">在线缴费</h2>
+    
+    <div class="card">
+        <h3>待缴费项目</h3>
+        {% if results %}
+            <p>您有 <strong>{{ results|length }}</strong> 个待缴费项目</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>缴费单号</th>
+                        <th>金额</th>
+                        <th>类型</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for payment in results %}
+                    <tr>
+                        <td>{{ payment.payment_id }}</td>
+                        <td>¥{{ "%.2f"|format(payment.price) }}</td>
+                        <td>
+                            {% if payment.payment_type %}
+                                {{ payment.payment_type }}
+                            {% else %}
+                                医疗费用
+                            {% endif %}
+                        </td>
+                        <td>{{ payment.created_at.strftime('%Y-%m-%d %H:%M:%S') if payment.created_at else '未知' }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('patient_pay') }}" style="display: inline;">
+                                <input type="hidden" name="payment_id" value="{{ payment.payment_id }}">
+                                <button type="submit" class="btn" style="padding: 0.25rem 0.75rem; font-size: 0.9rem;">立即支付</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <div style="text-align: right; margin-top: 1rem;">
+                <strong>总计：¥{{ "%.2f"|format(results|sum(attribute='price')) }}</strong>
+            </div>
+        {% else %}
+            <div style="text-align: center; padding: 2rem;">
+                <p style="color: #666; font-size: 1.2rem;">暂无待缴费项目</p>
+                <p style="color: #999;">您的所有费用已结清</p>
+            </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary">返回首页</a>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-top: 2rem;">
+        <h3>缴费说明</h3>
+        <ul style="list-style: none; padding-left: 0;">
+            <li>💰 <strong>缴费类型</strong>：包括挂号费、药品费、检查费等</li>
+            <li>✅ <strong>支付方式</strong>：支持在线支付，支付后立即生效</li>
+            <li>📋 <strong>缴费记录</strong>：所有缴费记录可在系统中查询</li>
+            <li>🔒 <strong>安全保障</strong>：支付过程安全可靠，保护您的隐私</li>
+            <li>📞 <strong>问题咨询</strong>：如有疑问请联系医院客服</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

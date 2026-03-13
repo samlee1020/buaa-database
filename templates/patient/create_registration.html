@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 在线挂号{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">在线挂号</h2>
+    
+    <div class="card">
+        <h3>选择科室</h3>
+        <form method="POST" action="{{ url_for('patient_create_registration') }}">
+            <div class="form-group">
+                <label for="department_id">选择科室：</label>
+                <select class="form-control" id="department_id" name="department_id" required>
+                    <option value="">请选择要挂号的科室</option>
+                    {% for department in departments %}
+                    <option value="{{ department.department_id }}">{{ department.department_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div style="text-align: center; margin-top: 2rem;">
+                <button type="submit" class="btn">提交挂号</button>
+                <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary" style="margin-left: 1rem;">返回</a>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card" style="margin-top: 2rem;">
+        <h3>科室列表</h3>
+        {% if departments %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>科室编号</th>
+                        <th>科室名称</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for department in departments %}
+                    <tr>
+                        <td>{{ department.department_id }}</td>
+                        <td>{{ department.department_name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p style="color: #666; text-align: center;">暂无科室信息</p>
+        {% endif %}
+    </div>
+    
+    <div class="card" style="margin-top: 2rem;">
+        <h3>挂号说明</h3>
+        <ul style="list-style: none; padding-left: 0;">
+            <li>🏥 <strong>选择科室</strong>：根据您的病情选择合适的科室</li>
+            <li>⏰ <strong>挂号流程</strong>：提交挂号后，管理员会为您分配医生</li>
+            <li>💰 <strong>挂号费用</strong>：挂号成功后需要支付挂号费</li>
+            <li>📋 <strong>挂号记录</strong>：可在"挂号记录"中查看挂号状态</li>
+            <li>✅ <strong>就诊提醒</strong>：请按时前往指定科室就诊</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

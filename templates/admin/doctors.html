@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 医生管理{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">医生管理</h2>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>新增医生</h3>
+        <form method="POST" action="{{ url_for('admin_doctors') }}">
+            <input type="hidden" name="action" value="add">
+            <div class="form-group">
+                <label for="name">医生姓名：</label>
+                <input type="text" class="form-control" id="name" name="name" 
+                       placeholder="请输入医生姓名" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="gender">性别：</label>
+                <select class="form-control" id="gender" name="gender" required>
+                    <option value="">请选择性别</option>
+                    <option value="男">男</option>
+                    <option value="女">女</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone_number">手机号：</label>
+                <input type="tel" class="form-control" id="phone_number" name="phone_number" 
+                       placeholder="请输入手机号" required>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="submit" class="btn">新增医生</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>调整医生科室</h3>
+        <form method="POST" action="{{ url_for('admin_doctors') }}">
+            <input type="hidden" name="action" value="update_department">
+            <div class="form-group">
+                <label for="doctor_id">医生工号：</label>
+                <input type="number" class="form-control" id="doctor_id" name="doctor_id" 
+                       placeholder="请输入医生工号" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="department_id">新科室：</label>
+                <select class="form-control" id="department_id" name="department_id" required>
+                    <option value="">请选择科室</option>
+                    {% for department in departments %}
+                    <option value="{{ department.department_id }}">{{ department.department_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="submit" class="btn">调整科室</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>调整医生职称</h3>
+        <form method="POST" action="{{ url_for('admin_doctors') }}">
+            <input type="hidden" name="action" value="update_position">
+            <div class="form-group">
+                <label for="doctor_id">医生工号：</label>
+                <input type="number" class="form-control" id="doctor_id" name="doctor_id" 
+                       placeholder="请输入医生工号" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="position">新职称：</label>
+                <input type="text" class="form-control" id="position" name="position" 
+                       placeholder="请输入职称（如：主任医师、副主任医师等）" required>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="submit" class="btn">调整职称</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="card" style="margin-bottom: 2rem;">
+        <h3>删除医生</h3>
+        <form method="POST" action="{{ url_for('admin_doctors') }}">
+            <input type="hidden" name="action" value="delete">
+            <div class="form-group">
+                <label for="delete_doctor_id">医生工号：</label>
+                <input type="number" class="form-control" id="delete_doctor_id" name="doctor_id" 
+                       placeholder="请输入要删除的医生工号" required>
+            </div>
+            
+            <div style="text-align: center; margin-top: 1rem;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('确定要删除这位医生吗？')">删除医生</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>医生列表</h3>
+        {% if doctors %}
+            <p>共 <strong>{{ doctors|length }}</strong> 位医生</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>工号</th>
+                        <th>姓名</th>
+                        <th>性别</th>
+                        <th>手机号</th>
+                        <th>职称</th>
+                        <th>科室</th>
+                        <th>创建时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for doctor in doctors %}
+                    <tr>
+                        <td>{{ doctor.doctor_id }}</td>
+                        <td>{{ doctor.name }}</td>
+                        <td>{{ doctor.gender }}</td>
+                        <td>{{ doctor.phone_number }}</td>
+                        <td>{{ doctor.position or '无职称' }}</td>
+                        <td>{{ doctor.department_name or '未分配' }}</td>
+                        <td>{{ doctor.created_at.strftime('%Y-%m-%d %H:%M:%S') if doctor.created_at else '未知' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 2rem;">
+                <p style="color: #666; font-size: 1.2rem;">暂无医生信息</p>
+                <p style="color: #999;">请先添加医生</p>
+            </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('admin_home') }}" class="btn btn-secondary">返回管理后台</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}门诊管理系统 - 挂号记录{% endblock %}
+
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto;">
+    <h2 style="color: #667eea; margin-bottom: 2rem; text-align: center;">挂号记录</h2>
+    
+    <div class="card">
+        <h3>您的挂号记录</h3>
+        {% if results %}
+            <p>共找到 <strong>{{ results|length }}</strong> 条挂号记录</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>挂号编号</th>
+                        <th>科室</th>
+                        <th>医生</th>
+                        <th>状态</th>
+                        <th>创建时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registration in results %}
+                    <tr>
+                        <td>{{ registration.registration_id }}</td>
+                        <td>
+                            {% if registration.department_name %}
+                                {{ registration.department_name }}
+                            {% else %}
+                                待分配
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if registration.doctor_name %}
+                                {{ registration.doctor_name }}
+                            {% else %}
+                                待分配
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if registration.doctor_id %}
+                                ✅ 已分配医生
+                            {% else %}
+                                ⏳ 待分配
+                            {% endif %}
+                        </td>
+                        <td>{{ registration.created_at.strftime('%Y-%m-%d %H:%M:%S') if registration.created_at else '未知' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div style="text-align: center; padding: 2rem;">
+                <p style="color: #666; font-size: 1.2rem;">暂无挂号记录</p>
+                <p style="color: #999;">您可以前往<a href="{{ url_for('patient_create_registration') }}">在线挂号</a>进行预约</p>
+            </div>
+        {% endif %}
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="{{ url_for('patient_create_registration') }}" class="btn">新的挂号</a>
+            <a href="{{ url_for('patient_dashboard') }}" class="btn btn-secondary" style="margin-left: 1rem;">返回首页</a>
+        </div>
+    </div>
+    
+    <div class="card" style="margin-top: 2rem;">
+        <h3>挂号状态说明</h3>
+        <ul style="list-style: none; padding-left: 0;">
+            <li>⏳ <strong>待分配</strong>：挂号已提交，等待管理员分配医生</li>
+            <li>✅ <strong>已分配医生</strong>：医生已分配，请按时就诊</li>
+            <li>💊 <strong>已开具处方</strong>：医生已为您开具处方</li>
+            <li>💰 <strong>待缴费</strong>：有未支付的费用</li>
+            <li>✅ <strong>已完成</strong>：就诊流程已完成</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
